@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import './App.css';
 import { Button } from '@chakra-ui/react';
 import axios from 'axios';
 
-function App() {
+function Chats() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
@@ -29,4 +28,4 @@ function App() {
   );
 }
 
-export default App;
+export default Chats;
