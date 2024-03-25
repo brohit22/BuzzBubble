@@ -1,7 +1,31 @@
+// backend/index.js
+
 import express from 'express';
-const PORT = process.env.PORT || 3000;
+import dotenv from 'dotenv';
+import connectDB from './db/index.js';
+import cors from 'cors'; // Import cors package
 
 const app = express();
+
+dotenv.config({
+  path: './.env',
+});
+
+const PORT = process.env.PORT || 3000;
+
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`⚙️ Server is running at port : ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log('MONGO db connection failed !!! ', err);
+  });
+
+// Use CORS middleware
+app.use(cors());
+
 app.get('/', (req, res) => {
   res.send(`<div>
   Hello World!
@@ -17,39 +41,15 @@ app.get('/api/messages', (req, res) => {
       message: 'Hey Bob, how are you doing?',
       timestamp: '2024-03-17T12:00:00Z',
     },
-    {
-      id: 2,
-      sender: 'Bob',
-      recipient: 'Alice',
-      message: "Hi Alice! I'm doing well, thanks for asking. How about you?",
-      timestamp: '2024-03-17T12:05:00Z',
-    },
-    {
-      id: 3,
-      sender: 'Alice',
-      recipient: 'Bob',
-      message: "I'm good too, just busy with work lately.",
-      timestamp: '2024-03-17T12:10:00Z',
-    },
-    {
-      id: 4,
-      sender: 'Bob',
-      recipient: 'Alice',
-      message: "Understandable. Hope it's not too overwhelming!",
-      timestamp: '2024-03-17T12:15:00Z',
-    },
-    {
-      id: 5,
-      sender: 'Alice',
-      recipient: 'Bob',
-      message:
-        "Not too bad, just keeping up with deadlines. How's your project going?",
-      timestamp: '2024-03-17T12:20:00Z',
-    },
+    // Other messages...
   ];
   res.send(messages);
 });
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
 });
+
+export default app;

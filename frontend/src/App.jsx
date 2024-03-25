@@ -22,7 +22,9 @@ function App() {
       <Button colorScheme='blue'>Click</Button>
       {messages.map((message) => (
         <div key={message.id}>
-          <h3>{message.sender}</h3>
+          <h2>
+            {message.sender}: {message.message}
+          </h2>
         </div>
       ))}
     </>
